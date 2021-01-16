@@ -8,6 +8,10 @@ import {Picker} from '@react-native-picker/picker';
 import CheckBox from 'react-native-check-box'
 import { ScrollView } from 'react-native-gesture-handler';
 import Helper from '../utils/Helper'
+import checkContact from '../fetchApi/auth/checkContact'
+import checkUserName from '../fetchApi/auth/checkUserName'
+import AuthContext from '../utils/AuthContext'
+import signup from '../fetchApi/auth/signup'
 
 const initialLayout = {
     height: Device.screenSize().height,
@@ -20,11 +24,15 @@ export default function RegisterCommponent(props){
     const [show, setShow] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [password, setPassword] = React.useState('');
+    const [contact, setContact] = React.useState('');
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
+    const [username, setUserName] = React.useState('');
     const [isValidatePassword, setValidatePassword] =  React.useState(true)
     const [repeatPassword, setRepeatPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
     const [isCheck, setIsCheck] = React.useState(false);
-    const [gender, setGender] = React.useState('Giới tính');
+    const [gender, setGender] = React.useState('MALE');
     const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
@@ -45,6 +53,115 @@ export default function RegisterCommponent(props){
     showMode('time');
   };
 
+  const onSubmit = () => {
+    if(!Helper.validateEmail(contact) && !Helper.validatePhoneNumber(contact)){
+        Helper.showAlert("Thông báo", "Email hoặc số điện thoại không hợp lệ!",
+        [
+            { text: "Ok", style: 'cancel', onPress: null }
+        ]
+        );
+        return;
+    }else{
+        checkContact(contact).then((res) => {
+            if(res.message !== "ok"){
+                Helper.showAlert("Thông báo", "Email/sđt đã tồn tại!",
+        [
+            { text: "Ok", style: 'cancel', onPress: null }
+        ]
+        );
+            }
+        })
+        .catch(err=> {
+            Helper.showAlert("Thông báo", "Không kết nối được với server!",
+            [
+                { text: "Ok", style: 'cancel', onPress: null }
+            ]
+            );
+        })
+    }
+    if(username.length < 6){
+        console.warn(username, username.length);
+        Helper.showAlert("Thông báo", "Tên tài khoản tối thiểu 6 kí tự!",
+        [
+            { text: "Ok", style: 'cancel', onPress: null }
+        ]
+        );
+        return;
+    }else{
+        checkUserName(username).then((res) => {
+            if(res.message !== "ok"){
+                Helper.showAlert("Thông báo", "Tên tài khoản đã tồn tại!",
+        [
+            { text: "Ok", style: 'cancel', onPress: null }
+        ]
+        );
+            }
+        })
+        .catch(err=> {
+            Helper.showAlert("Thông báo", "Không kết nối được với server!",
+            [
+                { text: "Ok", style: 'cancel', onPress: null }
+            ]
+            );
+        })
+    }
+    if(password.length < 8){
+        Helper.showAlert("Thông báo", "Mật khẩu tối thiểu 8 kí tự!",
+        [
+            { text: "Ok", style: 'cancel', onPress: null }
+        ]
+        );
+        return;
+    }
+    
+    if(firstName === "" || lastName === "" || date === null || gender === 'Giới tính'){
+        if(username.length < 6){
+            Helper.showAlert("Thông báo", "Thông tin thiếu xìn mới nhập đầy đủ để tiếp tục!",
+            [
+                { text: "Ok", style: 'cancel', onPress: null }
+            ]
+            );
+            return;
+        }
+    }
+    if(!isCheck){
+        if(username.length < 6){
+            Helper.showAlert("Thông báo", "Bạn phải chấp nhận điều khoản và dịch vụ của chúng tôi trước!",
+            [
+                { text: "Ok", style: 'cancel', onPress: null }
+            ]
+            );
+            return;
+        }
+    }
+
+    console.warn(gender);
+    signup({username, contact, password, dob: date.getMilliseconds(), firstName, lastName, gender})
+    .then((res) => {
+        console.warn(res);
+        if(res.message == "Verify code sent!"){
+            props.navigation.navigate("verify", {
+                username: username,
+                isSend: true
+            });
+        }else{
+            Helper.showAlert("Thông báo", "Tạo tài khoản thất bại!",
+            [
+                { text: "Ok", style: 'cancel', onPress: null }
+            ]
+            );
+        }
+    })
+    .catch(err => {
+        console.warn(err);
+        Helper.showAlert("Thông báo", "Tạo tài khoản thất bại!",
+            [
+                { text: "Ok", style: 'cancel', onPress: null }
+            ]
+            );
+    })
+  }
+
         return(
             <ScrollView>
             <SafeAreaView>
@@ -62,6 +179,8 @@ export default function RegisterCommponent(props){
                     <TextInput
                         style={{fontSize: 15, color: '#636363', padding: 10, paddingVertical: 6}}
                             placeholder="Họ"
+                            value={firstName}
+                            onChangeText = {text => setFirstName(text)}
                         />
                     </View>
                     <View
@@ -70,6 +189,8 @@ export default function RegisterCommponent(props){
                     <TextInput
                     style={{fontSize: 15, color: '#636363', padding: 10, paddingVertical: 6}}
                         placeholder="Tên"
+                        value={lastName}
+                            onChangeText = {text => setLastName(text)}
                     />
                     </View>
                 </View>
@@ -78,6 +199,8 @@ export default function RegisterCommponent(props){
                     <TextInput
                     style={{fontSize: 15, color: '#636363', padding: 10, paddingVertical: 6}}
                         placeholder="Số di động hoặc email"
+                        value={contact}
+                        onChangeText = {text => setContact(text)}
                     />
             </View>
             <View style={{marginTop: 20}}>
@@ -112,8 +235,10 @@ export default function RegisterCommponent(props){
                 <Picker
                 selectedValue={gender}
                 style={{width: '100%', color: '#636363'}}
-                onValueChange={(itemValue, itemIndex) =>
+                onValueChange={(itemValue, itemIndex) =>{
+                    console.warn("value: ", itemValue);
                     setGender(itemValue)
+                }
                 }>
                 <Picker.Item label="Nam" value="MALE" />
                 <Picker.Item label="Nữ" value="FEMALE" />
@@ -124,6 +249,8 @@ export default function RegisterCommponent(props){
                 <TextInput
                 placeholder="Tên tài khoản"
                 style={{fontSize: 15, color: '#636363', padding: 10, paddingVertical: 6}}
+                value={username}
+                onChangeText = {text => setUserName(text)}
                 />
             </View>
                 <View style={{marginTop: 20, position: 'relative', width: '100%', borderWidth: 1, borderColor: '#636363', borderRadius: 5}}>
@@ -187,7 +314,9 @@ export default function RegisterCommponent(props){
                     <TouchableOpacity style={{width: 116, height: 32,marginTop: 32 
                         ,backgroundColor: '#3879BD', borderRadius: 8, borderRadius:10
                         ,display: 'flex', justifyContent: 'center', alignItems: 'center'
-                        }}>
+                        }}
+                        onPress={onSubmit}
+                        >
                         <Text
                             style={{color: '#fff', fontSize: 15}}
                         >Đăng ký</Text>

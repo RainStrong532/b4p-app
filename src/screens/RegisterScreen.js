@@ -8,7 +8,7 @@ class RegisterScreen extends React.Component {
     render() {
         return (
             <View>
-                <HeaderView title="Register" style={styles.headerContainer1} {...this.props}/>
+                <HeaderView title="Đăng ký" style={styles.headerContainer1} {...this.props}/>
                 <RegisterContainer {...this.props}/>
             </View>
         );

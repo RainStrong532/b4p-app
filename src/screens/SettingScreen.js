@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Button, Text, TextInput, View, StyleSheet } from 'react-native';
 import SettingComponent from '../components/SettingComponent';
-export function SettingScreen() {
+export function SettingScreen(props) {
     const {container} = styles;
     return (
       <View style={container}>
-        <SettingComponent {...this.props}/>
+        <SettingComponent {...props}/>
       </View>
     );
   }

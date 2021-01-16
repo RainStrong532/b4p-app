@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import * as actions from '../actions/HomeAction'
 import { View} from "react-native";
 import HomeComponent from '../components/HomeComponent'
+
 class HomeContainer extends  React.Component {
   render() {
     return (
@@ -15,18 +16,23 @@ class HomeContainer extends  React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.warn("map", state);
   return{
     auth: state.auth.jwt,
-    test: state.test.messageResponse
+    test: state.test.messageResponse,
+    posts: state.posts.listData
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
       test: (data) =>  {
-        console.warn("container");
         dispatch(actions.test(data))
+      },
+      getPosts: (data) => {
+        dispatch(actions.getPosts(data))
+      },
+      createPost: (data) => {
+        dispatch(actions.createPosts(data))
       }
     }
 }

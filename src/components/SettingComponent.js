@@ -41,16 +41,14 @@ const data = [
     {
         title: "Ngôn ngữ",
         image: Images.web,
-        subItems: [
-            {
-                title: "Tiếng Việt",
-                image: Images.web
-            },
-            {
-                title: "Tiếng Anh",
-                image: Images.web
-            }
-        ]
+    },
+    {
+        title: "Thông tin cá nhân",
+        image: Images.info,
+    },
+    {
+        title: "Danh sách chặn",
+        image: Images.block,
     },
     {
         title: "Đăng xuất",
@@ -97,13 +95,13 @@ export default class SettingComponent extends React.Component{
            })
         }
         return(
-            <View style={{marginTop: 42}}>
+            <View style={{}}>
                 <FlatList
                     removeClippedSubviews={false}
                     data={data}
                     renderItem={this._renderItem}
                     keyExtractor={this._keyExtractor}
-                    contentContainerStyle={{ width: '100%', minHeight: '100%', marginTop: 5 }}
+                    contentContainerStyle={{ width: '100%', minHeight: '100%', marginTop: 5, paddingTop: 42, paddingBottom: 40 }}
                     // onEndReached={this.getMoreItems}
                     // onRefresh={this.refreshList}
                     // refreshing={this.state.loading}

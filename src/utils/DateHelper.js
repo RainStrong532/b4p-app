@@ -16,34 +16,33 @@ const timeSince = (timeStamp) => {
 
     const currentTimestamp = Math.round(new Date().getTime() / 1000)
     const diff = currentTimestamp - timeStamp
-
     const minutes = Math.round(diff / 60)
     if (minutes < 1) {
-        return i18next.t('justnow')
+        return 'vừa xong'
     }
 
     if (minutes < 60) {
-        return minutes + ' ' + i18next.t('minutes')
+        return minutes + ' ' + 'phút'
     }
 
     const hours = Math.round(diff / (60 * 60))
     if (hours === 1) {
-        return i18next.t('AHours')
+        return '1 giờ'
     }
 
     if (hours < 24) {
-        return hours + ' ' + i18next.t('hours')
+        return hours + ' ' + 'giờ'
     }
 
     if (hours < 48) {
-        return i18next.t('Yesterday')
+        return 'hôm qua'
     }
 
     const days = Math.round(diff / (60 * 60 * 24))
     if (days === 1) {
-        return i18next.t('ADay')
+        return '1 ngày'
     }
-    return days + ' ' + i18next.t('day')
+    return days + ' ' + 'ngày'
 }
 
 const convertTimeToFomart = (timeStamp) => {

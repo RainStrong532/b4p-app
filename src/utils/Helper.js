@@ -7,7 +7,7 @@ const validateEmail = (email) => {
 
 const validatePhoneNumber = (phoneNumber) => {
     var re = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    return re.test(String(email).toLowerCase());
+    return re.test(String(phoneNumber).toLowerCase());
 }
 
 const validateUrl = (url) => {

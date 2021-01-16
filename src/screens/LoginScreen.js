@@ -6,10 +6,9 @@ import { styles } from "../commonStyles/styles";
 class LoginScreen extends React.Component {
    
     render() {
-         console.warn("login props: ", this.props);
         return (
-            <View>
-                <HeaderView removeLeft = {true} title="Login" style={styles.headerContainer1} {...this.props} rightButton = "Trợ giúp" rightType = "text" rightStyle={{color: "#fff", fontSize: 12}} onPressRightButton={() => { console.warn("Hello");}}/>
+            <View style={{flex: 1}}>
+                <HeaderView removeLeft = {true} title="Đăng nhập" style={styles.headerContainer1} {...this.props} rightButton = "Trợ giúp" rightType = "text" rightStyle={{color: "#fff", fontSize: 12}} onPressRightButton={() => { console.warn("Hello");}}/>
                 <LoginContainer {...this.props}/>
             </View>
         );

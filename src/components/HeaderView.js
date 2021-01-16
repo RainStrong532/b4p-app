@@ -9,7 +9,7 @@ const initialLayout = {
     width: Device.screenSize().width,
 };
 
-export default class LoginComponent extends React.Component{
+export default class HeaderView extends React.Component{
     constructor(props){
         super(props);
     }

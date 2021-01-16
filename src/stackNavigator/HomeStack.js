@@ -63,7 +63,6 @@ export function HomeStack() {
       <Tab.Screen name="filter" component={screens.FilterScreen} />
       <Tab.Screen name="notify" component={screens.NotifyScreen} />
       <Tab.Screen name="setting" component={screens.SettingScreen} />
-      
     </Tab.Navigator>
   );
 }

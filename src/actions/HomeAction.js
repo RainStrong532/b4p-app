@@ -5,3 +5,16 @@ export function test(payload) {
         payload
     })
 }
+
+export function getPosts(payload) {
+    return ({
+        type: types.GET_POST_REQUEST,
+        payload
+    })
+}
+export function createPosts(payload) {
+    return ({
+        type: types.CREATE_POST_REQUEST,
+        payload
+    })
+}

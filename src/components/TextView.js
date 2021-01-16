@@ -17,23 +17,20 @@ export default class TextView extends  React.Component{
         return(
           <Text 
           style={{fontSize: 15, fontWeight: 'bold'}}
-          onPress={onPress}>...View more</Text>
+          onPress={onPress}>...Xem thêm...</Text>
         )
       }
       renderViewLess(onPress){
         return(
           <Text
             style={{fontSize: 15, fontWeight: 'bold'}}
-          onPress={onPress}>View less</Text>
+          onPress={onPress}>Ẩn bớt</Text>
         )
       }
     render(){
         return(
             <View>
                 <ViewMoreText
-                    numberOfLines={3}
-                    renderViewMore={this.renderViewMore}
-                    renderViewLess={this.renderViewLess}
                     textStyle={{textAlign: 'left'}}
                 >
                     <Text

@@ -17,7 +17,7 @@ import * as types from './src/constants'
 
 const Stack = createStackNavigator();
 
-export default function App(props) {
+export default function App({navigation}) {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -28,12 +28,21 @@ export default function App(props) {
             isLoading: false,
           };
         case 'SIGN_IN':
+          if(action.message !== null && action.message !== undefined){
+            AsyncStorage.setItem('loginMessage', action.message);
+            return{
+              ...prevState,
+              message: action.message
+            }
+          }
           if(action.token){
           AsyncStorage.setItem('userToken', action.token);
+          AsyncStorage.removeItem('loginMessage');
           }
           return {
             ...prevState,
             isSignout: false,
+            message: null,
             userToken: action.token,
           };
         case 'SIGN_OUT':
@@ -49,6 +58,7 @@ export default function App(props) {
       isLoading: true,
       isSignout: false,
       userToken: null,
+      message: null
     }
   );
 
@@ -78,7 +88,14 @@ export default function App(props) {
       signIn: async data => {
         try {
           const res = await login(data)
-          if (res.status != null) {
+          if(res.message){
+            console.warn("message: ", res);
+            dispatch({
+              type: 'SIGN_IN',
+              message: res.message
+            })
+          }
+          else if (res.status != null) {
           } else {
               dispatch({
                 type: 'SIGN_IN',
@@ -119,7 +136,6 @@ export default function App(props) {
     }),
     []
   );
-
   return (
     <Provider store={store}>
     <AuthContext.Provider value={authContext}>
@@ -143,8 +159,10 @@ export default function App(props) {
             />
           ) : (
             // User is signed in
+            <>
             <Stack.Screen
-            options={{ headerTitle: () =>
+            navigationOption
+            options={({ navigation, route }) => ({ headerTitle: () =>
                <HeaderView
                   leftButton ={Images.logo_mini}
                   leftStyle={{width: 54, height: 34}}
@@ -152,14 +170,45 @@ export default function App(props) {
                   rightStyle2 = {{width: 29, height: 29}}
                   rightButton = {Images.inbox_circle}
                   rightStyle = {{width: 29, height: 29, marginLeft: 18}}
-                  {...props}
+                  onPressRightButton = {() => {
+                    navigation.navigate('conversation')
+                  }}
                 /> ,
               headerStyle: {
                 backgroundColor: "#fff"
               }
-            }}
+            }
+            )}
             name="home" component={Stacks.HomeStack}
             />
+            <Stack.Screen 
+            options={
+              {headerShown: false}
+            }
+            name="create_post" component={screens.PostCreateScreen}
+            />
+            <Stack.Screen 
+            options={
+              {headerShown: false}
+            }
+            name="create_post_sos" component={screens.PostCreateSOSScreen}
+            />
+            <Stack.Screen
+            options={
+              {headerShown: false}
+            }
+            name = "conversation" component={screens.ConversationScreen}/>
+            <Stack.Screen
+            options={
+              {headerShown: false}
+            }
+            name = "chat" component={screens.ChatScreen}/>
+            <Stack.Screen
+            options={
+              {headerShown: false}
+            }
+            name = "camera" component={screens.CameraRollScreen}/>
+            </>
           )}
         </Stack.Navigator>
       </NavigationContainer>

@@ -5,6 +5,7 @@ import {styles} from '../../commonStyles/styles'
 import Device from '../../modules/Device'
 import SubSettingItem from './SubSettingItem'
 import {AuthContext} from '../../utils/AuthContext'
+import Helper from '../../utils/Helper'
 
 const initialLayout = {
     height: Device.screenSize().height,
@@ -34,7 +35,13 @@ export default function SettingItemComponent(props){
                         onPress = {
                             () => {
                                 if(props.image == Images.signout){
-                                    signOut();
+                                    Helper.showAlert("", "Bạn có chắc muốn đăng xuất không?",[
+                                        { text: 'Huy', style: 'cancel', onPress: null },
+                                        {
+                                            text: "Ok", style: 'destructive', onPress: () => {
+                                                signOut();
+                                        }}
+                                    ])  
                                 }
                                 if(subItems.length > 0){
                                      setOpen(!open)
