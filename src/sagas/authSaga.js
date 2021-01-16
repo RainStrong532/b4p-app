@@ -1,30 +1,31 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { put, takeEvery } from 'redux-saga/effects'
 import * as types from '../constants'
-import login from '../fetchApi/auth/login'
+import getMyInfoApi from '../fetchApi/auth/getMyInfo'
 
-function* loginToApp(action) {
+function* getMyInfo() {
     try {
-        const data = yield login(action.payload)
-
-        if (data.status != null) {
-            console.warn("Login failure", data);
+        let token = "Bearer ";
+        token += yield AsyncStorage.getItem("userToken");
+        const data = yield getMyInfoApi(token)
+        console.warn("get my info api: ", data);
+        if (data.id == null || data.id == undefined) {
             yield put({
-                type: types.LOGIN_FAILURE,
+                type: types.GET_POST_FAILURE,
                 payload: {
-                    errorMessage: data.error
+                    errorMessage: data
                 }
             })
         } else {
-            console.warn("Login succsess");
             yield put({
-                type: types.LOGIN_SUCCSESS,
+                type: types.GET_MYINFO_SUCCSESS,
                 payload: data
             })
         }
     } catch (error) {
-        console.warn("Login failure", error);
+        console.warn("get my info api: ", error);
         yield put({
-            type: types.LOGIN_FAILURE,
+            type: types.GET_MYINFO_FAILURE,
             payload: {
                 errorMessage: error.message
             }
@@ -33,5 +34,5 @@ function* loginToApp(action) {
 }
 
 export const AuthSaga = [
-    takeEvery(types.LOGIN_REQUEST, loginToApp),
+    takeEvery(types.GET_MYINFO_REQUEST, getMyInfo),
 ];

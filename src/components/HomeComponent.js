@@ -5,6 +5,7 @@ import PostViewHeader from './post/PostViewHeader'
 import PostHeaderCreate from './post/PostHeaderCreate';
 import PostViewComponent from './post/PostViewComponent';
 import getPosts from '../fetchApi/home/getPosts'
+import ModalOptionComponent from './commons/ModalOptionComponent';
 
 
 export default class HomeComponent extends React.Component{
@@ -14,6 +15,8 @@ export default class HomeComponent extends React.Component{
           token: null,
           isLoadMore: false,
           refeshing: false,
+          showModal: false,
+          data: null
         }
         this.page = 0;
     }
@@ -22,7 +25,7 @@ export default class HomeComponent extends React.Component{
       }
       _renderItem =({item}) => {
         return(
-          <PostViewComponent item = {item} {...this.props}/>
+          <PostViewComponent item = {item} showModal={this.onPressShowModal} navigation={this.props.navigation}/>
         )
     }
     _keyExtractor = (item, idx) => idx.toString()
@@ -48,6 +51,13 @@ export default class HomeComponent extends React.Component{
           this.setState({refeshing: false})
     })
   }
+  onPressShowModal = (data) => {
+    console.warn("data pass", data);
+    this.setState({showModal: !this.state.showModal});
+    if(data){
+    this.setState({data: data});
+    }
+  }
     _renderBottom = () => {
       const { isLoadMore } = this.state;
       return (<View style={{ height: 40, justifyContent: 'center' }}>
@@ -55,10 +65,18 @@ export default class HomeComponent extends React.Component{
       </View>)
   }
     render(){
+      console.warn("myInfo", this.props.updatePost);
       let {refeshing, isLoadMore} = this.state;
       let {posts} = this.props;
       if(!posts){
         posts = [];
+      }
+      if(this.props.route.params){
+        console.warn("aAA");
+        if(this.props.route.params.reload){
+          console.warn("aAAz");
+          this.props.getPosts({pageNo: this.page});
+        }
       }
         return(
             <View>
@@ -90,6 +108,18 @@ export default class HomeComponent extends React.Component{
                          />
                      }
                   />
+                  {
+                    
+                    <ModalOptionComponent
+                    showModal =  {this.state.showModal}
+                    onPressShowModal = {this.onPressShowModal}
+                    data = {this.state.data}
+                    myInfo = {this.props.myInfo}
+                    navigation={this.props.navigation}
+                    updatePost={this.props.updatePost}
+                    deletePost={this.props.deletePost}
+                    />
+                  }
                 </SafeAreaView>
 
             </View>

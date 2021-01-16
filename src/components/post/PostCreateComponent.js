@@ -24,14 +24,15 @@ const ImageState = {
 
 export default class PostCreateComponent extends React.Component {
     constructor(props) {
+        console.warn("constructor", props.route.params);
         super(props);
+        this.images = props.route.params ? props.route.params.item.images.map(item  => {return  {data: item, state: ImageState.success}}) : [];
         this.state = {
             isLoading: false,
-            privacy: Privacy.public,
+            privacy: props.route.params? props.route.params.item.privacy :  Privacy.public,
             type: "NORMAL",
-            description: "",
-            images: [
-            ],
+            description: props.route.params ? props.route.params.item.description : "",
+            images: this.images ? this.images : []
 
         }
     }
@@ -77,24 +78,35 @@ export default class PostCreateComponent extends React.Component {
         data.privacy = this.state.privacy;
         data.type = this.state.type;
         data.description  = this.state.description;
+        if(this.props.route.params){
+            data.id = this.props.route.params.item.id;
+            this.props.route.params.updatePost(data)
+            this.props.navigation.goBack()
+        }else{
         let token = "Bearer ";
              AsyncStorage.getItem("userToken").then(res => {
+
             token += res;
-        createPost(data, token).then(res=>{
-            console.warn(res);
-            if(res.id){
-                this.props.navigation.goBack();
-            }
-        })
-        .catch(err => {
-            console.warn(err);
-        })
+                createPost(data, token).then(res=>{
+                    if(res.id){
+                        this.props.navigation.navigate("home");
+                    }
+                })
+                .catch(err => {
+                    console.warn(err);
+                })
     })
     .catch(err => console.warn(err))
+}
     }
     render() {
         let images = this.state.images;
         let listImage = [];
+        let item = null;
+        console.warn("create: ", this.props.route);
+        if(this.props.route.params){
+            item = this.props.route.params.item;
+        }
         listImage = images.map((item, index)=> {
             return(
                 <TouchableOpacity
@@ -156,7 +168,7 @@ export default class PostCreateComponent extends React.Component {
         })
         return (
             <View>
-            <HeaderView title="Tạo bài viết" style={styles.headerContainer1} {...this.props} rightButton ="ĐĂNG" rightStyle={{color: '#fff', fontWeight: '600', fontSize: 15}} rightType="text"  onPressRightButton={this.onCreate}/>
+            <HeaderView title={item ? "Chỉnh sửa bài viết" :"Tạo bài viết"} style={styles.headerContainer1} {...this.props} rightButton ="ĐĂNG" rightStyle={{color: '#fff', fontWeight: '600', fontSize: 15}} rightType="text"  onPressRightButton={this.onCreate}/>
             <View style={{paddingHorizontal: 20, marginTop: 12}}>
                 <View>
                     <View style={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
@@ -188,7 +200,10 @@ export default class PostCreateComponent extends React.Component {
                                     <Picker.Item label="Chỉ mình tôi" value="PRIVATE" />
                                 </Picker>
                                 </View>
-                                <TouchableOpacity
+                                {
+                                    (!item)
+                                    ?
+                                    <TouchableOpacity
                                     onPress = {() => {
                                         this.props.navigation.navigate("create_post_sos")
                                     }}
@@ -199,6 +214,9 @@ export default class PostCreateComponent extends React.Component {
                                        </Text>
                                     </View>
                                 </TouchableOpacity>
+                                :
+                                <View></View>    
+                                }
                             </View>
                         </View>
                     </View>

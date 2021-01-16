@@ -20,6 +20,12 @@ const Privacy = {
     friend: 'FRIEND'
 }
 
+const ImagePrivacy =  {
+    private: Images.lock,
+    public: Images.public,
+    friend: Images.friend
+}
+
 export default class PostViewComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -29,16 +35,20 @@ export default class PostViewComponent extends React.Component {
         let user = item.user;
         let createDate = new Date(item.createDate);
         let stylePostView = stylePost.normal;
+        let styleState = stylePost.stateRequest
         if (item.type === "SOS" || item.type === "sos") {
             switch (item.state) {
                 case PostStatus.process:
-                    stylePostView = stylePost.processing
+                    stylePostView = stylePost.processing;
+                    styleState = stylePost.stateProcessing
                     break;
                 case PostStatus.request:
-                    stylePostView = stylePost.emergency
+                    stylePostView = stylePost.emergency;
+                    styleState = stylePost.stateRequest;
                     break;
                 case PostStatus.success:
-                    stylePostView = stylePost.success
+                    stylePostView = stylePost.success;
+                    styleState = stylePost.stateSuccess
                     break;
             }
         }
@@ -73,9 +83,11 @@ export default class PostViewComponent extends React.Component {
                                             {
                                                 item.type != "SOS"
                                                 ?
+
                                                 <Image
-                                                    source={Images.public} style={{ width: 13, height: 13, marginHorizontal: 10, resizeMode: 'contain' }}
+                                                source={item.privacy === Privacy.public ?  ImagePrivacy.public : item.privacy === Privacy.private ? ImagePrivacy.private : ImagePrivacy.friend} style={{ width: 13, height: 13, marginHorizontal: 10, resizeMode: 'contain' }}
                                                 />
+                                                
                                                 :
                                                <View style={{width: 13, height: 13}}></View>
                                             }
@@ -83,7 +95,7 @@ export default class PostViewComponent extends React.Component {
                                                 item.state
                                                     ?
                                                     <View
-                                                        style={stylePost.stateRequest}
+                                                        style={styleState}
                                                     >
                                                         <Text
                                                             style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}
@@ -110,18 +122,39 @@ export default class PostViewComponent extends React.Component {
                                 </View>
                             </View>
                             <View>
-                                <TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.props.showModal({item, user});
+                                    }}
+                                >
                                     <Image source={Images.more} style={{ width: 26, height: 6, resizeMode: 'contain' }} />
                                 </TouchableOpacity>
                             </View>
                         </View>
                         {
+                        item.title
+                            ?
+                            <View
+                            style={{marginTop: 10}}
+                            >
+                            <Text
+                                style={{ fontSize: 15, fontWeight: 'bold' }}
+                            >
+                                {
+                                    "Tiêu đề: "+item.title
+                                }
+                            </Text>
+                            </View>
+                            :
+                            <></>
+                    }
+                        {
                             item.location
                                 ?
                                 <View>
                                     <Text
-                                        style={{ fontWeight: '600', fontSize: 18, marginBottom: 10, marginTop: 15 }}
-                                    >Địa chỉ</Text>
+                                        style={{ fontWeight: '600', fontSize: 15, marginBottom: 10}}
+                                    >Địa chỉ:</Text>
                                     <View>
                                         <TouchableOpacity
                                             style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
@@ -145,24 +178,11 @@ export default class PostViewComponent extends React.Component {
                             <View
                                 className="title"
                             >
-                                {
-                                    item.title
-                                        ?
-                                        <Text
-                                            style={{ fontSize: 15, fontWeight: 'bold' }}
-                                        >
-                                            {
-                                                item.title
-                                            }
-                                        </Text>
-                                        :
-                                        <></>
-                                }
                                 <Text>{item.description}</Text>
                             </View>
                         </View>
 
-                        <PostImagesView images={this.props.item.images} />
+                        <PostImagesView images={this.props.item.images ? this.props.item.images : []} />
                     </View>
                 </View>
 
@@ -176,11 +196,11 @@ const stylePost = StyleSheet.create({
     emergency: {
         borderTopColor: '#DF3838', borderTopWidth: 2, borderBottomColor: '#DF3838', borderBottomWidth: 2, backgroundColor: 'rgba(254, 35, 35, 0.5)'
     },
-    processing: {
+    success: {
         borderTopColor: '#4CAF50', borderTopWidth:
             2, borderBottomColor: '#4CAF50', borderBottomWidth: 2, backgroundColor: 'rgba(76, 175, 80, 0.47)'
     },
-    success: {
+    processing: {
         borderTopColor: '#F3C72E', borderTopWidth:
             2, borderBottomColor: '#F3C72E', borderBottomWidth: 2, backgroundColor: 'rgba(243, 199, 46, 0.63)'
     },
@@ -190,5 +210,11 @@ const stylePost = StyleSheet.create({
     },
     stateRequest: {
         borderRadius: 12, paddingHorizontal: 8, paddingVertical: 2, backgroundColor: '#FE2323', display: 'flex', alignItems: 'center', justifyContent: 'center'
+    },
+    stateProcessing: {
+        borderRadius: 12, paddingHorizontal: 8, paddingVertical: 2, backgroundColor: '#FFC107', display: 'flex', alignItems: 'center', justifyContent: 'center'
+    },
+    stateSuccess: {
+        borderRadius: 12, paddingHorizontal: 8, paddingVertical: 2, backgroundColor: '#4CAF50', display: 'flex', alignItems: 'center', justifyContent: 'center'
     }
 })

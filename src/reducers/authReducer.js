@@ -1,7 +1,7 @@
 import * as types from '../constants'
 
 const DEFAULT_STATE = {
-    jwt: null,
+    myInfo: null,
     dataFetched: false,
     isFetching: false,
     error: false,
@@ -10,27 +10,25 @@ const DEFAULT_STATE = {
 
 export default (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-        case types.LOGIN_REQUEST:
+        case types.GET_MYINFO_REQUEST:
             return {
                 ...state,
                 isFetching: true,
-                jwt: null,
             }
-        case types.LOGIN_SUCCSESS:
+        case types.GET_MYINFO_SUCCSESS:
             return {
                 ...state,
                 isFetching: false,
                 dataFetched: true,
                 error: false,
                 errorMessage: null,
-                jwt: action.payload,
+                myInfo: action.payload,
             }
-        case types.LOGIN_FAILURE:
+        case types.GET_POST_FAILURE:
             return {
                 ...state,
                 isFetching: false,
                 error: true,
-                jwt: null,
                 errorMessage: action.payload.errorMessage
             }
         default:

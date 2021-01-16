@@ -15,7 +15,7 @@ export default class PostViewAction extends React.Component {
     }
     render() {
         const {item} = this.props;
-        const { type } = this.props.item.type;
+        console.warn("props action: ", this.props.item.type);
         return (
             <View style={{ backgroundColor: '#fff' }}>
                 {/* main action */}
@@ -48,12 +48,12 @@ export default class PostViewAction extends React.Component {
                     <View style={{ marginRight: 20 }}>
                         <TouchableOpacity>
                             <Image
-                                source={Images.locate} style={{ width: 24, height: 24, resizeMode: 'contain' , tintColor: item.location ? '#000' : 'rgba(0,0,0, 0.4)'}}
+                                source={Images.locate} style={{ width: 24, height: 24, resizeMode: 'contain' , tintColor: item.type === "SOS" ? 'rgba(0,0,0, 1)' : 'rgba(0,0,0, 0.4)'}}
                             />
                         </TouchableOpacity>
                     </View>
                     {
-                        type === "SOS"
+                        item.type === "SOS"
                             ?
                             <TouchableOpacity
                                 style={{ width: 123, borderLeftWidth: 1, borderLeftColor: '#938F8F', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}

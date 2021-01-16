@@ -11,3 +11,8 @@ export function test(payload) {
         payload
     })
 }
+export function getMyInfo() {
+    return ({
+        type: types.GET_MYINFO_REQUEST,
+    })
+}

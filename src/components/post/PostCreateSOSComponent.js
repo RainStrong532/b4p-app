@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react'
-import { View, ImageBackground, Image, TextInput, Button, Text, TouchableOpacity } from 'react-native'
+import { View, ImageBackground, Image, TextInput, Button, Text, TouchableOpacity , ActivityIndicator} from 'react-native'
 import { Images } from '../../../assets/Images'
 import { styles } from '../../commonStyles/styles'
 import {Picker} from '@react-native-picker/picker';
@@ -9,6 +9,7 @@ import createPost from '../../fetchApi/home/createPost'
 import uploadFile from '../../fetchApi/home/uploadFile'
 import { DOMAIN } from '../../constants';
 import _ from 'lodash'
+import { SafeAreaView } from 'react-navigation';
 
 const Privacy = {
     private: 'PRIVATE',
@@ -20,22 +21,27 @@ const ImageState = {
     success: "success",
     failure: "failure"
 }
-
+const PostStatus = {
+    request: 'REQUEST',
+    process: 'PROCESSING',
+    success: 'SUCCESS'
+}
 export default class PostCreateSOSComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.images = props.route.params ? props.route.params.item.images.map(item  => {return  {data: item, state: ImageState.success}}) : [];
         this.state = {
             privacy: Privacy.public,
             type: "SOS",
-            description: "",
-            title: "",
+            description: props.route.params ? props.route.params.item.description : "",
+            title: props.route.params ? props.route.params.item.title : "",
             location: {
                 id: 2,
                 name: "Học viện Bưu chính Viễn Thông,Mộ Lao, Hà Đông, Hà Nội, Việt Nam"
             },
-            state: "REQUEST",
-            images: [
-            ],
+            state: props.route.params ? props.route.params.item.state : PostStatus.request,
+            images: this.images ? this.images : [],
+
 
         }
     }
@@ -84,6 +90,11 @@ export default class PostCreateSOSComponent extends React.Component {
         data.title = this.state.title;
         data.state = this.state.state;
         data.location = this.state.location
+        if(this.props.route.params){
+            data.id = this.props.route.params.item.id;
+            this.props.route.params.updatePost(data)
+            this.props.navigation.goBack()
+        }else{
         let token = "Bearer ";
              AsyncStorage.getItem("userToken").then(res => {
             token += res;
@@ -99,9 +110,14 @@ export default class PostCreateSOSComponent extends React.Component {
     })
     .catch(err => console.warn(err))
     }
+    }
     render() {
         let images = this.state.images;
         let listImage = [];
+        let item = null;
+        if(this.props.route.params){
+        item = this.props.route.params.item;
+        }
         listImage = images.map((item, index)=> {
             return(
                 <TouchableOpacity
@@ -128,7 +144,7 @@ export default class PostCreateSOSComponent extends React.Component {
                         ?
                         <View style={{width: '100%', height: '100%', position: 'relative'}}>
                             <Image
-                             source={{uri: DOMAIN+"app/images/6.jpg"}}
+                             source={{uri: DOMAIN+"app"+item.data.url}}
                              style={{width: '100%', height: '100%', resizeMode: 'cover'}}
                             />
                             <TouchableOpacity
@@ -162,6 +178,7 @@ export default class PostCreateSOSComponent extends React.Component {
             )
         })
         return (
+            <SafeAreaView>
             <View>
                 <HeaderView title="Cứu trợ" style={styles.headerContainer1} {...this.props} rightButton ="ĐĂNG" rightStyle={{color: '#fff', fontWeight: '600', fontSize: 15}} rightType="text"  onPressRightButton={this.onCreate}/>
             <View style={{paddingHorizontal: 20, marginTop: 12}}>
@@ -256,7 +273,12 @@ export default class PostCreateSOSComponent extends React.Component {
                        >Tình trạng</Text>
                        <View style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
                             <TouchableOpacity
-                                style={{borderRadius: 20, backgroundColor: '#FE2323'}}
+                                style={{borderRadius: 20, backgroundColor: this.state.state === PostStatus.request ? '#FE2323' : '#E5E5E5'}}
+                                onPress={() => {
+                                    if(item.id){
+                                        this.setState({state: PostStatus.request})
+                                    }
+                                }}
                             >
                                 <Text
                                     style={{fontSize: 15, color: '#fff', fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 5}}
@@ -265,19 +287,29 @@ export default class PostCreateSOSComponent extends React.Component {
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                            style={{borderRadius: 20, backgroundColor: '#E5E5E5'}}
+                             onPress={() => {
+                                if(item.id){
+                                    this.setState({state: PostStatus.process})
+                                }
+                            }}
+                            style={{borderRadius: 20, backgroundColor: this.state.state === PostStatus.process ? '#FE2323' : '#E5E5E5'}}
                             >
                                 <Text
-                                 style={{fontSize: 15, fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 5}}
+                                 style={{fontSize: 15, fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 5, color: '#fff'}}
                                 >
                                     Đang cứu trợ
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                            style={{borderRadius: 20, backgroundColor: '#E5E5E5'}}
+                             onPress={() => {
+                                if(item.id){
+                                    this.setState({state: PostStatus.success})
+                                }
+                            }}
+                            style={{borderRadius: 20, backgroundColor: this.state.state === PostStatus.success ? '#FE2323' : '#E5E5E5'}}
                             >
                                 <Text
-                               style={{fontSize: 15, fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 5}}
+                               style={{fontSize: 15, fontWeight: 'bold', paddingHorizontal: 10, paddingVertical: 5, color: '#fff'}}
                                 >
                                     Đã cứu trợ
                                 </Text>
@@ -287,6 +319,7 @@ export default class PostCreateSOSComponent extends React.Component {
                 </View>
             </View>
             </View>
+            </SafeAreaView>
         )
     }
 }

@@ -52,4 +52,5 @@ export const Images = {
     arrow_right: require('./images/arrow_right.png'),
     block: require('./images/block.png'),
     info: require('./images/info.png'),
+    friend: require('./images/friend.png'),
 }

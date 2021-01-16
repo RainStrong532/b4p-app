@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux'
 import * as actions from '../actions/HomeAction'
+import * as authActions from '../actions/AuthAction'
 import { View} from "react-native";
 import HomeComponent from '../components/HomeComponent'
 
 class HomeContainer extends  React.Component {
+  componentDidMount(){
+    this.props.getMyInfo();
+  }
   render() {
     return (
         <View>
@@ -17,22 +21,27 @@ class HomeContainer extends  React.Component {
 
 const mapStateToProps = (state) => {
   return{
-    auth: state.auth.jwt,
-    test: state.test.messageResponse,
+    myInfo: state.auth.myInfo,
     posts: state.posts.listData
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      test: (data) =>  {
-        dispatch(actions.test(data))
+      getMyInfo: () =>  {
+        dispatch(authActions.getMyInfo())
       },
       getPosts: (data) => {
         dispatch(actions.getPosts(data))
       },
       createPost: (data) => {
         dispatch(actions.createPosts(data))
+      },
+      updatePost: (data) => {
+        dispatch(actions.updatePost(data))
+      },
+      deletePost: (data)  => {
+        dispatch(actions.deletePost(data))
       }
     }
 }

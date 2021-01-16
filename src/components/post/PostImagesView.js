@@ -95,6 +95,10 @@ export default class PostImagesView extends  React.Component{
                     </TouchableOpacity>
                 </View>
                 :
+                images.length == 0
+                ?
+                <></>
+                :
                  <View>
                     <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <TouchableOpacity>

@@ -18,3 +18,15 @@ export function createPosts(payload) {
         payload
     })
 }
+export function deletePost(payload) {
+    return ({
+        type: types.DELETE_POST_REQUEST,
+        payload
+    })
+}
+export function updatePost(payload) {
+    return ({
+        type: types.UPDATE_POST_REQUEST,
+        payload
+    })
+}

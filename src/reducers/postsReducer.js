@@ -15,7 +15,6 @@ export default (state = DEFAULT_STATE, action) => {
                 isFetching: true,
             }
         case types.GET_POST_SUCCSESS:
-            console.warn("get success");
             return {
                 ...state,
                 isFetching: false,
@@ -45,6 +44,66 @@ export default (state = DEFAULT_STATE, action) => {
                 errorMessage: null,
             }
         case types.CREATE_POST_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                error: true,
+                errorMessage: action.payload.errorMessage
+            }
+        case types.DELETE_POST_REQUEST:
+            return {
+                ...state,
+                isFetching: true,
+            }
+        case types.DELETE_POST_SUCCSESS:
+            return {
+                ...state,
+                isFetching: false,
+                dataFetched: true,
+                error: false,
+                errorMessage: null,
+            }
+        case types.DELETE_POST_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                error: true,
+                errorMessage: action.payload.errorMessage
+            }
+        case types.UPDATE_POST_REQUEST:
+            return {
+                ...state,
+                isFetching: true,
+            }
+        case types.UPDATE_POST_SUCCSESS:
+            return {
+                ...state,
+                isFetching: false,
+                dataFetched: true,
+                error: false,
+                errorMessage: null,
+            }
+        case types.UPDATE_POST_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                error: true,
+                errorMessage: action.payload.errorMessage
+            }
+        case types.DELETE_POST_REQUEST:
+            return {
+                ...state,
+                isFetching: true,
+            }
+        case types.DELETE_POST_SUCCSESS:
+            return {
+                ...state,
+                isFetching: false,
+                dataFetched: true,
+                error: false,
+                errorMessage: null,
+            }
+        case types.DELETE_POST_FAILURE:
             return {
                 ...state,
                 isFetching: false,
