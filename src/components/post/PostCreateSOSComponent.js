@@ -59,7 +59,6 @@ export default class PostCreateSOSComponent extends React.Component {
         this.setState({images: images}, () => {
             AsyncStorage.getItem('userToken').then(res => {
                 token+=res;
-                console.warn(token);
                 uploadFile(data, token).then(res => {
                     images[images.length-1].state = ImageState.success;
                     images[images.length-1].data = res;
@@ -99,13 +98,11 @@ export default class PostCreateSOSComponent extends React.Component {
              AsyncStorage.getItem("userToken").then(res => {
             token += res;
         createPost(data, token).then(res=>{
-            console.warn(res);
             if(res.id){
                 this.props.navigation.navigate("home");
             }
         })
         .catch(err => {
-            console.warn(err);
         })
     })
     .catch(err => console.warn(err))

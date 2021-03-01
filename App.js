@@ -89,7 +89,6 @@ export default function App({navigation}) {
         try {
           const res = await login(data)
           if(res.message){
-            console.warn("message: ", res);
             dispatch({
               type: 'SIGN_IN',
               message: res.message
@@ -107,22 +106,17 @@ export default function App({navigation}) {
       },
       signOut: async() =>{
         let userToken = await AsyncStorage.getItem('userToken');
-        console.warn(userToken);
         if(!userToken) userToken = state.userToken
         if(userToken){
         try {
           const res = await logout(userToken)
           if (res.status != null) {
-             console.warn("Logout failure", res);
           } else {
-              console.warn("Logout succsess");
               dispatch({ type: 'SIGN_OUT'})
           }
       } catch (error) {
-         console.warn("Logout failure", error);
       }
         }else{
-          console.warn("Token null");
         }
       },
       signUp: async data => {

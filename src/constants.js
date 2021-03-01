@@ -1,5 +1,5 @@
 //Domain
-export const DOMAIN = "http://192.168.31.209:8080/api/";
+export const DOMAIN = "http://192.168.31.214:8080/api/";
 
 //Auth contanst
 

@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function login(data) {
 
     return new Promise((resolve, reject) => {
-            console.warn("api call");
         const url = DOMAIN + 'auth/signin';
         fetch(url, {
                 method: "POST",

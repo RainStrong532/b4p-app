@@ -86,7 +86,6 @@ export default function LoginComponent(props) {
                                         }else{
                                         signIn({ username: username, password: password });
                                         AsyncStorage.getItem("loginMessage").then((res) => {
-                                            console.warn("login message: ", res);
                                             if (res === "Not verify yet!") {
                                                 Helper.showAlert("Thông báo", "Tài khoản của bạn chưa được xác thực bạn có muốn xác thực?", [
                                                     { text: 'cancel', style: 'cancel', onPress: null },

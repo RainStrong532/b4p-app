@@ -57,9 +57,9 @@ export default class VerifyAccount extends React.Component{
     }
     onResend = () => {
             resendMail({username: this.state.username}).then((res) => {
-                if(res.message === "sent"){
+                if(res.status === "ok"){
                     this.setState({isSend: true, time: 30}, () => {
-                        Helper.showAlert("Thông báo", "Mã đã được gửi!", [
+                        Helper.showAlert("Thông báo", res.message, [
                             { text: "Ok", style: 'cancel', onPress: null }
                         ])
                         let interval = setInterval(() => {
@@ -122,15 +122,19 @@ export default class VerifyAccount extends React.Component{
                             ,display: 'flex', justifyContent: 'center', alignItems: 'center'
                             }}
                             onPress={() => () => {
-                                if(this.state.time == 0){
+                                if(this.state.time < 0){
                                 this.onResend()}}
                             }
                        >
-                           <Text style={{color: '#fff', fontSize: 15}}>Gửi lại {(this.state.time !== 0)  ?  <Text>(Sau {this.state.time})</Text> : ""}</Text>
+                           <Text style={{color: '#fff', fontSize: 15}}>Gửi lại {(this.state.time > 0)  ?  <Text>(Sau {this.state.time})</Text> : ""}</Text>
                        </TouchableOpacity>
                    </View>
                    </View>
                       :
+                      <View>
+                        <Text
+                            style={{fontSize: 15, fontWeight: '600'}}
+                        >Nhập Email/Sđt đã đăng ký hoặc tên tài khoản:</Text>
                       <View style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                       <View style={{marginVertical: 20, width: initialLayout.width-40, borderWidth: 1, borderColor: '#636363', borderRadius: 5}}>
                       <TextInput
@@ -141,16 +145,17 @@ export default class VerifyAccount extends React.Component{
                       />
                       </View>
                       <TouchableOpacity
-                       style={{width: 116, height: 32,marginTop: 20 
-                        ,backgroundColor: '#3879BD', borderRadius: 8, borderRadius:10
+                       style={{height: 32,marginTop: 20 , width: initialLayout.width-40, padding: 10,
+                        backgroundColor: '#3879BD', borderRadius: 8, borderRadius:10
                         ,display: 'flex', justifyContent: 'center', alignItems: 'center'
                         }}
                         onPress={this.onResend}
                       >
                            <Text
                             style={{color: '#fff', fontSize: 15}}
-                           >Xác thực</Text>
+                           >Gửi mã xác thực</Text>
                        </TouchableOpacity>
+                      </View>
                       </View>
                    }
                </View>

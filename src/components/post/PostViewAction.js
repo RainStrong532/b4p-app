@@ -15,7 +15,6 @@ export default class PostViewAction extends React.Component {
     }
     render() {
         const {item} = this.props;
-        console.warn("props action: ", this.props.item.type);
         return (
             <View style={{ backgroundColor: '#fff' }}>
                 {/* main action */}

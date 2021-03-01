@@ -21,9 +21,7 @@ const ModalOptionComponent = (props) => {
   let showModal = props.showModal;
   const {data, myInfo, updatePost, deletePost} = props;
   onDelete = () => {
-      console.warn("onDelete");
       if(deletePost){
-        console.warn("deletePost");
           deletePost(data.item.id);
       }
   }

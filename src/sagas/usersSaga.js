@@ -7,7 +7,6 @@ function* testAuth(action) {
         const data = yield test(action.payload)
 
         if (data.status != null) {
-            console.warn("Login failure", data);
             yield put({
                 type: types.TEST_FAILURE,
                 payload: {
@@ -15,14 +14,12 @@ function* testAuth(action) {
                 }
             })
         } else {
-            console.warn("Login succsess", data);
             yield put({
                 type: types.TEST_SUCCSESS,
                 payload: data
             })
         }
     } catch (error) {
-        console.warn("Login failure", error);
         yield put({
             type: types.TEST_FAILURE,
             payload: {

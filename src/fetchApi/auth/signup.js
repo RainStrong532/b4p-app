@@ -1,7 +1,6 @@
 import { DOMAIN } from '../../constants'
 
 export default function signin(data) {
-    console.warn(data);
     return new Promise((resolve, reject) => {
         const url = DOMAIN + 'auth/profileSignup';
         fetch(url, {

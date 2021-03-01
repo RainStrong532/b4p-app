@@ -24,7 +24,6 @@ const ImageState = {
 
 export default class PostCreateComponent extends React.Component {
     constructor(props) {
-        console.warn("constructor", props.route.params);
         super(props);
         this.images = props.route.params ? props.route.params.item.images.map(item  => {return  {data: item, state: ImageState.success}}) : [];
         this.state = {
@@ -50,7 +49,6 @@ export default class PostCreateComponent extends React.Component {
         this.setState({images: images}, () => {
             AsyncStorage.getItem('userToken').then(res => {
                 token+=res;
-                console.warn(token);
                 uploadFile(data, token).then(res => {
                     images[images.length-1].state = ImageState.success;
                     images[images.length-1].data = res;
@@ -103,7 +101,6 @@ export default class PostCreateComponent extends React.Component {
         let images = this.state.images;
         let listImage = [];
         let item = null;
-        console.warn("create: ", this.props.route);
         if(this.props.route.params){
             item = this.props.route.params.item;
         }
@@ -191,7 +188,7 @@ export default class PostCreateComponent extends React.Component {
                                     selectedValue={this.state.privacy}
                                     style={{ minWidth: 135, color: '#636363', textAlign: 'right', height: 32}}
                                     onValueChange={(itemValue, itemIndex) => {
-                                        console.warn("value: ", itemValue);
+
                                         this.setState({privacy: itemValue});
                                     }
                                     }>

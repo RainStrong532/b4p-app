@@ -9,7 +9,6 @@ export class PostCreateScreen extends React.Component {
         super(props);
     }
     render() {
-        console.warn();
         return (
             <View>
                 <PostCreateContainer {...this.props}/>

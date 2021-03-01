@@ -9,7 +9,6 @@ export class PostCreateSOSScreen extends React.Component {
         super(props);
     }
     render() {
-        console.warn();
         return (
             <View>
                 <PostCreateSOSComponent {...this.props}/>

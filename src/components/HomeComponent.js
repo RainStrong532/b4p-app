@@ -52,7 +52,6 @@ export default class HomeComponent extends React.Component{
     })
   }
   onPressShowModal = (data) => {
-    console.warn("data pass", data);
     this.setState({showModal: !this.state.showModal});
     if(data){
     this.setState({data: data});
@@ -65,16 +64,13 @@ export default class HomeComponent extends React.Component{
       </View>)
   }
     render(){
-      console.warn("myInfo", this.props.updatePost);
       let {refeshing, isLoadMore} = this.state;
       let {posts} = this.props;
       if(!posts){
         posts = [];
       }
       if(this.props.route.params){
-        console.warn("aAA");
         if(this.props.route.params.reload){
-          console.warn("aAAz");
           this.props.getPosts({pageNo: this.page});
         }
       }

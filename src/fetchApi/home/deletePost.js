@@ -1,7 +1,6 @@
 import { DOMAIN } from '../../constants'
 
 export default function deletePost(data, token) {
-    console.warn("id: ", data);
     return new Promise((resolve, reject) => {
 
         const url = DOMAIN + `app/posts/${data}`;

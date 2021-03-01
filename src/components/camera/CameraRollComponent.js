@@ -22,7 +22,6 @@ export default class CameraRollComponent extends React.Component {
   }
 
   async componentDidMount() {
-    console.warn("camera didmount");
     this.getPermissionAsync()
   }
 
@@ -33,7 +32,6 @@ export default class CameraRollComponent extends React.Component {
 
     // Camera Permission
     const { granted,status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    console.warn(granted, status);
     this.setState({ hasPermission: status === 'granted' });
   }
 

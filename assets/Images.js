@@ -28,7 +28,7 @@ export const Images = {
     lock: require('./images/lock.png'),
     google: require('./images/google.png'),
     facebook: require('./images/facebook.png'),
-    avtDemo: require('./images/avtDemo.png'),
+    avtDemo: require('./images/avatar.jpeg'),
     avtDemo2: require('./images/avtDemo2.png'),
     avtDemo3: require('./images/avtDemo3.png'),
     more: require('./images/more.png'),

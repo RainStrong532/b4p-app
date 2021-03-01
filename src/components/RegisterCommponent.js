@@ -80,7 +80,6 @@ export default function RegisterCommponent(props){
         })
     }
     if(username.length < 6){
-        console.warn(username, username.length);
         Helper.showAlert("Thông báo", "Tên tài khoản tối thiểu 6 kí tự!",
         [
             { text: "Ok", style: 'cancel', onPress: null }
@@ -135,14 +134,13 @@ export default function RegisterCommponent(props){
         }
     }
 
-    console.warn(gender);
     signup({username, contact, password, dob: date.getMilliseconds(), firstName, lastName, gender})
     .then((res) => {
-        console.warn(res);
         if(res.message == "Verify code sent!"){
             props.navigation.navigate("verify", {
                 username: username,
-                isSend: true
+                isSend: true,
+                password: password
             });
         }else{
             Helper.showAlert("Thông báo", "Tạo tài khoản thất bại!",
@@ -153,7 +151,6 @@ export default function RegisterCommponent(props){
         }
     })
     .catch(err => {
-        console.warn(err);
         Helper.showAlert("Thông báo", "Tạo tài khoản thất bại!",
             [
                 { text: "Ok", style: 'cancel', onPress: null }
@@ -236,7 +233,6 @@ export default function RegisterCommponent(props){
                 selectedValue={gender}
                 style={{width: '100%', color: '#636363'}}
                 onValueChange={(itemValue, itemIndex) =>{
-                    console.warn("value: ", itemValue);
                     setGender(itemValue)
                 }
                 }>

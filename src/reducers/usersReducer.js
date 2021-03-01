@@ -15,7 +15,6 @@ export default (state = DEFAULT_STATE, action) => {
                 isFetching: true,
             }
         case types.TEST_SUCCSESS:
-            console.warn("res: ", action.payload);
             return {
                 ...state,
                 isFetching: false,
